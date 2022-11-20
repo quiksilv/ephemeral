@@ -2,10 +2,15 @@
 <html>
     <head>
         <title>Photos</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
     </head>
     <body>
-        {% for image in data.images %}
-            <img src="{{ url_for('static', filename='images/' + image) }}" />
-        {% endfor %}
+        <div class="container">
+            <div class="row row-cols-auto">
+            {% for image in data.images %}
+                <a href="{{ url_for('static', filename='images/' + image) }}"><img src="{{ url_for('static', filename='thumbs/' + image) }}" /></a>
+            {% endfor %}
+            </div>
+        </div>
     </body>
 </html>

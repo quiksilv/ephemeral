@@ -4,8 +4,6 @@ from Idler import Idler
 from dotenv import load_dotenv
 
 load_dotenv()
-# Had to do this stuff in a try-finally, since some testing 
-# went a little wrong.....
 try:
     # Set the following two lines to your creds and server
     M = imaplib2.IMAP4_SSL(os.getenv("SERVER") )
@@ -16,8 +14,8 @@ try:
     # Start the Idler thread
     idler = Idler(M)
     idler.start()
-    # Because this is just an example, exit after 1 minute.
-    time.sleep(1*60)
+    # exit after 5 minutes.
+    time.sleep(5*60)
 finally:
     # Clean up.
     idler.stop()

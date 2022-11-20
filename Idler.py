@@ -1,3 +1,4 @@
+from PIL import Image
 import imaplib2, time
 import email
 import os
@@ -62,29 +63,34 @@ class Idler(object):
                 for response_part in data:
                     if isinstance(response_part, tuple):
                         msg = email.message_from_bytes(response_part[1])
-                        print(msg['Subject'])
                         typ, data = self.M.store(num, '+FLAGS', '\\Seen')
                         self.save_attachment(msg)
 
     def save_attachment(self, msg, download_folder="static/images/"):
         """
         Given a message, save its attachments to the specified
-        download folder (default is tmp)
+        download folder, default is static/images/
 
         return: file path to attachment
         """
         att_path = "No attachment found."
+        print(msg['Subject'])
         for part in msg.walk():
             if part.get_content_maintype() == 'multipart':
                 continue
             if part.get('Content-Disposition') is None:
                 continue
-
             filename = part.get_filename()
             att_path = os.path.join(download_folder, filename)
-
-            if not os.path.isfile(att_path):
-                fp = open(att_path, 'wb')
-                fp.write(part.get_payload(decode=True))
-                fp.close()
+            # copy file to disk
+            fp = open(att_path, 'wb')
+            fp.write(part.get_payload(decode=True))
+            fp.close()
+            # check if file is a valid image
+            img = Image.open(att_path)
+            if img.format != 'JPEG' and img.format != 'PNG':
+                continue
+            thumb_path = os.path.join("static/thumbs/", filename)
+            img.thumbnail((90, 90) )
+            img.save(thumb_path)
         return att_path
