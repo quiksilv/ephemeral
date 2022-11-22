@@ -92,5 +92,5 @@ class Idler(object):
                 continue
             thumb_path = os.path.join("static/thumbs/", filename)
             img.thumbnail((90, 90) )
-            img.save(thumb_path)
+            img.save(thumb_path, exif=img.info['exif'])
         return att_path
